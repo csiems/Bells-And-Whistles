@@ -23,7 +23,32 @@ public class MainActivity extends AppCompatActivity {
         mDoubleTapTextView.setOnTouchListener(new OnDoubleTapListener(this) {
             @Override
             public void onDoubleTap(MotionEvent e) {
-                Toast.makeText(MainActivity.this, "You double-tapped the thing!", Toast.LENGTH_LONG).show();
+                if( mDoubleTapTextView.getAlpha() == 1) {
+                    mDoubleTapTextView.animate()
+                            .alpha(0.4f)
+                            .rotation(720)
+                            .xBy(200)
+                            .yBy(200)
+                            .setDuration(2000).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            mDoubleTapTextView.setText("Wheee!!!!!");
+                        }
+                    });
+                } else {
+                    mDoubleTapTextView.animate()
+                            .alpha(1f)
+                            .rotation(0)
+                            .xBy(-200)
+                            .yBy(-200)
+                            .setDuration(2000).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            mDoubleTapTextView.setText("Double Tap Me!");
+                        }
+                    });
+
+                }
             }
         });
     }
