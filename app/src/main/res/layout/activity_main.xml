@@ -8,6 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:padding="50dp"
+    android:background="@color/colorGrey"
     android:id="@+id/outsideRelativeLayout"
     tools:context="com.epicodus.bellsandwhistles.MainActivity">
 
@@ -60,6 +61,15 @@
             android:gravity="center_vertical"
             android:layout_below="@id/doubleTapTextView"
             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/shakeInstructionsTextView"
+            android:text="Shake The Phone!"/>
 
 
     </RelativeLayout>
