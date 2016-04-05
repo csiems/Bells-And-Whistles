@@ -7,15 +7,19 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
+import android.os.Vibrator;
 import android.provider.Settings;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
+import android.view.animation.BounceInterpolator;
 import android.view.animation.CycleInterpolator;
 
 import android.widget.RelativeLayout;
@@ -23,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.epicodus.bellsandwhistles.utils.OnDoubleTapListener;
+import com.epicodus.bellsandwhistles.utils.OnSwipeTouchListener;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     @Bind(R.id.parentRelativeLayout) RelativeLayout mParentRelativeLayout;
     @Bind(R.id.outsideRelativeLayout) RelativeLayout mOutsideRelativeLayout;
     @Bind(R.id.shakeInstructionsTextView) TextView mShakeInstructionsTextView;
+    @Bind(R.id.flingTextView) TextView mFlingTextView;
 
     private final String msg = MainActivity.class.getSimpleName();
     private SensorManager mSensorManager;
@@ -42,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private float last_x, last_y, last_z;
     private static final int SHAKE_THRESHOLD = 1500;
     private long lastShakeTime = 0;
+    private MediaPlayer mediaPlayer;
 
 
     @Override
@@ -64,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 return true;
             }
         });
+
 
         mParentRelativeLayout.setOnDragListener(new View.OnDragListener() {
             @Override
@@ -114,25 +122,82 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             @Override
             public void onDoubleTap(MotionEvent e) {
                 if( mDoubleTapTextView.getAlpha() == 1) {
+                    soundManager("downStairs");
                     mDoubleTapTextView.animate()
                             .alpha(0.4f)
                             .rotation(720)
-                            .xBy(200)
-                            .yBy(200)
-                            .setDuration(2000)
+                            .yBy(500)
+                            .setDuration(2640)
                             .withStartAction(setTextRunnable(mDoubleTapTextView, "Wheee!"))
                             .withEndAction(setTextRunnable(mDoubleTapTextView, "Double Tap Me!"));
                 } else {
+                    soundManager("twirlyWhirly");
                     mDoubleTapTextView.animate()
                             .alpha(1f)
                             .rotation(0)
-                            .xBy(-200)
-                            .yBy(-200)
-                            .setDuration(2000)
+                            .yBy(-500)
+                            .setDuration(4100)
                             .withStartAction(setTextRunnable(mDoubleTapTextView, "Wheee!"))
                             .withEndAction(setTextRunnable(mDoubleTapTextView, "Double Tap Me!"));
                 }
             }
+        });
+
+
+
+        mFlingTextView.setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeDown() {
+                soundManager("slideWhistle");
+                mFlingTextView.animate()
+                        .translationY(500)
+                        .setInterpolator(new FastOutSlowInInterpolator())
+                        .setDuration(550)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                mFlingTextView.animate()
+                                        .translationY(0)
+                                        .setDuration(320);
+                            }
+                        });
+
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                soundManager("boing");
+                mFlingTextView.animate()
+                        .translationX(-50)
+                        .setInterpolator(new BounceInterpolator())
+                        .setDuration(650);
+            }
+
+            @Override
+            public void onSwipeUp() {
+                mFlingTextView.animate()
+                        .translationY(-500)
+                        .setInterpolator(new FastOutSlowInInterpolator())
+                        .setDuration(550)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                mFlingTextView.animate()
+                                        .translationY(0)
+                                        .setDuration(320);
+                            }
+                        });
+            }
+
+            @Override
+            public void onSwipeRight() {
+                soundManager("boing");
+                mFlingTextView.animate()
+                        .translationX(50)
+                        .setInterpolator(new BounceInterpolator())
+                        .setDuration(650);
+            }
+
         });
 
 
@@ -142,11 +207,27 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public boolean onLongClick(View v) {
         if (v == mLongTapTextView) {
             mLongTapTextView.animate()
-                    .translationX(30)
-                    .setInterpolator(new CycleInterpolator(20))
-                    .setDuration(3000)
-                    .withStartAction(setTextRunnable(mLongTapTextView, "Earthquake!"))
-                    .withEndAction(setTextRunnable(mLongTapTextView, "Long Click Me!"));
+                .rotation(5)
+                .setInterpolator(new CycleInterpolator(10))
+                .setDuration(1000)
+                .withStartAction(setTextRunnable(mLongTapTextView, "Whoaa!"))
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                        if (vibrator.hasVibrator()) {
+                            vibrator.vibrate(2320);
+                        }
+                        soundManager("earthquake");
+                        mLongTapTextView.animate()
+                            .translationX(30)
+                            .setInterpolator(new CycleInterpolator(20))
+                            .setDuration(2320)
+                            .withStartAction(setTextRunnable(mLongTapTextView, "Earthquake!"))
+                            .withEndAction(setTextRunnable(mLongTapTextView, "Long Click Me!"));
+                    }
+                });
+
         }
         if (v == mDragTextView) {
             View.DragShadowBuilder dragShadow = new View.DragShadowBuilder(v);
@@ -208,4 +289,32 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    protected void soundManager(String soundName) {
+        if (mediaPlayer != null) {
+            mediaPlayer.reset();
+            mediaPlayer.release();
+        }
+        if (soundName.equals("downStairs")) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.comedy_music_falling_down_stairs);
+        }
+
+        if (soundName.equals("slideWhistle")) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.comedy_slide_whistle_playing_down);
+        }
+
+        if (soundName.equals("twirlyWhirly")) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.comedy_twirly_whirly);
+        }
+        if (soundName.equals("earthquake")) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.dragging_stone_along_concrete);
+        }
+        if (soundName.equals("boing")) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.comedy_boing_jews_harp_sprong);
+
+        }
+        mediaPlayer.start();
+    }
+
+
 }
