@@ -2,4 +2,5 @@
 <resources>
     <dimen name="itemSize">150dp</dimen>
     <dimen name="shapeTextSize">24dp</dimen>
+    <integer name="dropSize">740</integer>
 </resources>

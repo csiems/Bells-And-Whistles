@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 {
                     case DragEvent.ACTION_DRAG_STARTED:
                         Log.d(msg, "Action is DragEvent.ACTION_DRAG_STARTED");
+                        soundManager("pinkPanther");
                         break;
 
                     case DragEvent.ACTION_DRAG_ENTERED:
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     case DragEvent.ACTION_DRAG_ENDED   :
                         Log.d(msg, "Action is DragEvent.ACTION_DRAG_ENDED");
                         draggedView.setVisibility(View.VISIBLE);
+                        mediaPlayer.stop();
                         break;
 
                     default: break;
@@ -126,8 +128,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     mDoubleTapTextView.animate()
                             .alpha(0.4f)
                             .rotation(720)
-                            .yBy(500)
-                            .setDuration(2640)
+                            .yBy(getResources().getInteger(R.integer.dropSize))
+                            .setDuration(2600)
                             .withStartAction(setTextRunnable(mDoubleTapTextView, "Wheee!"))
                             .withEndAction(setTextRunnable(mDoubleTapTextView, "Double Tap Me!"));
                 } else {
@@ -135,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     mDoubleTapTextView.animate()
                             .alpha(1f)
                             .rotation(0)
-                            .yBy(-500)
+                            .yBy(-(getResources().getInteger(R.integer.dropSize)))
                             .setDuration(4100)
                             .withStartAction(setTextRunnable(mDoubleTapTextView, "Wheee!"))
                             .withEndAction(setTextRunnable(mDoubleTapTextView, "Double Tap Me!"));
@@ -266,12 +268,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     long now = System.currentTimeMillis();
                     if (now - lastShakeTime > 1000) {
                         ColorDrawable background = (ColorDrawable) mOutsideRelativeLayout.getBackground();
-                        if (background.getColor() == getResources().getColor(R.color.colorAccent)) {
+                        if (background.getColor() == getResources().getColor(R.color.colorYellow)) {
                             mOutsideRelativeLayout.setBackgroundColor(getResources().getColor(R.color.colorGrey));
-                            mShakeInstructionsTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
                         } else {
-                            mOutsideRelativeLayout.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                            mShakeInstructionsTextView.setTextColor(getResources().getColor(R.color.colorGrey));
+                            mOutsideRelativeLayout.setBackgroundColor(getResources().getColor(R.color.colorYellow));
                         }
                         lastShakeTime = System.currentTimeMillis();
                     }
@@ -298,11 +298,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if (soundName.equals("downStairs")) {
             mediaPlayer = MediaPlayer.create(this, R.raw.comedy_music_falling_down_stairs);
         }
-
         if (soundName.equals("slideWhistle")) {
             mediaPlayer = MediaPlayer.create(this, R.raw.comedy_slide_whistle_playing_down);
         }
-
         if (soundName.equals("twirlyWhirly")) {
             mediaPlayer = MediaPlayer.create(this, R.raw.comedy_twirly_whirly);
         }
@@ -311,7 +309,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         if (soundName.equals("boing")) {
             mediaPlayer = MediaPlayer.create(this, R.raw.comedy_boing_jews_harp_sprong);
-
+        }
+        if (soundName.equals("pinkPanther")) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.pink_panther);
+            mediaPlayer.setLooping(true);
+            mediaPlayer.seekTo(26000);
         }
         mediaPlayer.start();
     }

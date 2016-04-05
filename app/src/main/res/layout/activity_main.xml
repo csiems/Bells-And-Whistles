@@ -53,15 +53,17 @@
             android:layout_height="@dimen/itemSize"
             android:text="Drag Me!"
             android:id="@+id/dragTextView"
-            android:backgroundTint="#fff000"
+            android:backgroundTint="@color/colorPink"
             android:background="@drawable/circle"
             android:textSize="@dimen/shapeTextSize"
             android:textColor="#000"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:textAlignment="center"
             android:gravity="center_vertical"
-            android:layout_below="@id/doubleTapTextView"
-            />
+            android:layout_below="@+id/doubleTapTextView"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="50dp"
+            android:layout_alignParentStart="true" />
+
         <TextView
             android:layout_width="@dimen/itemSize"
             android:layout_height="@dimen/itemSize"
@@ -73,7 +75,8 @@
             android:textColor="#fff"
             android:textAlignment="center"
             android:gravity="center_vertical"
-            android:layout_alignTop="@+id/dragTextView"
+            android:layout_below="@+id/longTapTextView"
+            android:layout_marginTop="50dp"
             android:layout_alignLeft="@+id/longTapTextView"
             android:layout_alignStart="@+id/longTapTextView" />
 
