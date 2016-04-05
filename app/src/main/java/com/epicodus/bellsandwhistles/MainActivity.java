@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
             @Override
             public void onSwipeUp() {
+                soundManager("slideWhistle");
                 mFlingTextView.animate()
                         .translationY(-500)
                         .setInterpolator(new FastOutSlowInInterpolator())
@@ -201,8 +202,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
 
         });
-
-
     }
 
     @Override
