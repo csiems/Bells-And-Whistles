@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.epicodus.bellsandwhistles.utils.OnDoubleTapListener;
 
+import org.w3c.dom.Text;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -33,25 +35,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             .rotation(720)
                             .xBy(200)
                             .yBy(200)
-                            .setDuration(2000).withEndAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            mDoubleTapTextView.setText("Wheee!!!!!");
-                        }
-                    });
+                            .setDuration(2000)
+                            .withEndAction(setTextRunnable(mDoubleTapTextView, "Wheee!"));
                 } else {
                     mDoubleTapTextView.animate()
                             .alpha(1f)
                             .rotation(0)
                             .xBy(-200)
                             .yBy(-200)
-                            .setDuration(2000).withEndAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            mDoubleTapTextView.setText("Double Tap Me!");
-                        }
-                    });
-
+                            .setDuration(2000)
+                            .withEndAction(setTextRunnable(mDoubleTapTextView, "Double Tap Me!"));
                 }
             }
         });
@@ -62,18 +55,24 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     @Override
     public boolean onLongClick(View v) {
         if (v == mLongTapTextView) {
-            mLongTapTextView.animate().translationX(30).setInterpolator(new CycleInterpolator(20)).setDuration(3000).withStartAction(new Runnable() {
-                @Override
-                public void run() {
-                    mLongTapTextView.setText("Earthquaake!");
-                }
-            }).withEndAction(new Runnable() {
-                @Override
-                public void run() {
-                    mLongTapTextView.setText("Long press!");
-                }
-            });
+            mLongTapTextView.animate()
+                    .translationX(30)
+                    .setInterpolator(new CycleInterpolator(20))
+                    .setDuration(3000)
+                    .withStartAction(setTextRunnable(mLongTapTextView, "Earthquake!"))
+                    .withEndAction(setTextRunnable(mLongTapTextView, "Long Press Me!"));
         }
         return true;
     }
+
+    public Runnable setTextRunnable(final TextView v, final String message) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                v.setText(message);
+            }
+        };
+        return runnable;
+    }
+
 }
