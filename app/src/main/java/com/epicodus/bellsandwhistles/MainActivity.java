@@ -32,7 +32,7 @@ import com.epicodus.bellsandwhistles.utils.OnSwipeTouchListener;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements View.OnLongClickListener, SensorEventListener {
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener, View.OnLongClickListener, SensorEventListener {
     @Bind(R.id.doubleTapTextView) TextView mDoubleTapTextView;
     @Bind(R.id.longTapTextView) TextView mLongTapTextView;
     @Bind(R.id.dragTextView) TextView mDragTextView;
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         ButterKnife.bind(this);
 
         mLongTapTextView.setOnLongClickListener(this);
-        mDragTextView.setOnLongClickListener(this);
+        mDragTextView.setOnTouchListener(this);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -230,11 +230,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 });
 
         }
-        if (v == mDragTextView) {
-            View.DragShadowBuilder dragShadow = new View.DragShadowBuilder(v);
-            v.startDrag(null, dragShadow, v, 0);
-            v.setVisibility(View.INVISIBLE);
-        }
         return true;
     }
 
@@ -318,4 +313,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
 
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (v == mDragTextView) {
+            View.DragShadowBuilder dragShadow = new View.DragShadowBuilder(v);
+            v.startDrag(null, dragShadow, v, 0);
+            v.setVisibility(View.INVISIBLE);
+        }
+        return false;
+    }
 }
